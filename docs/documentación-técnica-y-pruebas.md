@@ -109,15 +109,38 @@ public long nextCustomerNumber() {
 * La inicialización solo ocurre si la tabla de clientes está vacía.
 
 ```java
+
+@Override
+@Transactional
+public void run(String... args) {
+    var count = (Long) entityManager.createQuery("SELECT COUNT(c) FROM Customer c").getSingleResult();
+
+    if (count > 0) {
+        log.info("Ya hay {} clientes en la base de datos, no se inicializan datos de prueba.", count);
+        return; // ya hay datos, no inicializar
+    }
+
+    initFakerCustomers();
+    initRealCustomers();
+}
+
+
 private void initFakerCustomers() {
     var faker = new Faker(Locale.of("es", "EC"));
     for (var i = 0; i < 20; i++) {
         long nextCustomerNumber = service.nextCustomerNumber();
-        // ... crear y persistir clientes y cuentas ...
+        // ... Crear y persistir clientes y cuentas con Faker
     }
+}
+
+private void initRealCustomers() {
+    // Creación de Luis y Maria con datos conocidos
 }
 ```
 
+* Los registros de nuestra tabla deberian verse más o menos así:
+
+[![Datos en reposo](assets/datos-en-reposo.png)](assets/datos-en-reposo.png)
 ---
 
 ## Librerías y Dependencias Clave
@@ -167,3 +190,4 @@ private void initFakerCustomers() {
 ![Coverage de las pruebas de integración](assets/coverage-pruebas-de-integracion.png)
 
 El reporte completo se encuentra en el archivo `docs/coverage-integration-tests/index.html`.
+
