@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "86da775b-7653-4401-9079-bc7d2fe02355",
+		"name": "BANCO-INTERNACIONAL-DESAFIO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50360958",
+		"_collection_link": "https://luidmidev-4409102.postman.co/workspace/Luis-Vasquez's-Workspace~0e612797-74fa-412c-8f96-673bc8a66b25/collection/50360958-86da775b-7653-4401-9079-bc7d2fe02355?action=share&source=collection_link&creator=50360958"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "customers",
+					"item": [
+						{
+							"name": "identification",
+							"item": [
+								{
+									"name": "{identificationNumber}",
+									"item": [
+										{
+											"name": "get By Identification Number",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/customers/identification/:identificationNumber",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"customers",
+														"identification",
+														":identificationNumber"
+													],
+													"variable": [
+														{
+															"key": "identificationNumber",
+															"value": "2300826355"
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"name": "OK",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "*/*"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/customers/identification/:identificationNumber",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"customers",
+																"identification",
+																":identificationNumber"
+															],
+															"variable": [
+																{
+																	"key": "identificationNumber",
+																	"value": "string"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "*/*"
+														}
+													],
+													"cookie": [],
+													"body": "{\n  \"id\": \"6a38906c-e921-3a99-aebd-d62c81894d64\",\n  \"name\": \"string\",\n  \"number\": \"string\",\n  \"identificationNumber\": \"string\",\n  \"identificationType\": \"CI\",\n  \"account\": {\n    \"number\": \"string\",\n    \"type\": \"CHECKING\",\n    \"balance\": 4006.9349517763285,\n    \"status\": \"INACTIVE\"\n  }\n}"
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "page",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/customers?query=account.type==CHECKING;account.balance<1000&page=0&size=5",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"customers"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "query",
+											"value": "account.type==CHECKING;account.balance<1000"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										},
+										{
+											"key": "sort",
+											"value": "string,string",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/customers?search=string&query=string&page=6073&size=2081&sort=string,string",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"customers"
+											],
+											"query": [
+												{
+													"key": "search",
+													"value": "string"
+												},
+												{
+													"key": "query",
+													"value": "string"
+												},
+												{
+													"key": "page",
+													"value": "6073"
+												},
+												{
+													"key": "size",
+													"value": "2081"
+												},
+												{
+													"key": "sort",
+													"value": "string,string"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"content\": [\n    {\n      \"id\": \"715e153f-43e9-f096-d113-ed443c63627c\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"identificationNumber\": \"string\",\n      \"identificationType\": \"CI\",\n      \"account\": {\n        \"number\": \"string\",\n        \"type\": \"CHECKING\",\n        \"balance\": 7047.801819985007,\n        \"status\": \"CLOSED\"\n      }\n    },\n    {\n      \"id\": \"98bdcf3e-666b-b614-e7ae-ced86cfbf18b\",\n      \"name\": \"string\",\n      \"number\": \"string\",\n      \"identificationNumber\": \"string\",\n      \"identificationType\": \"PASSPORT\",\n      \"account\": {\n        \"number\": \"string\",\n        \"type\": \"CHECKING\",\n        \"balance\": 2893.3939284837516,\n        \"status\": \"CLOSED\"\n      }\n    }\n  ],\n  \"page\": {\n    \"size\": 6372,\n    \"number\": 4246,\n    \"totalElements\": 1514,\n    \"totalPages\": 6081\n  }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		}
+	]
+}

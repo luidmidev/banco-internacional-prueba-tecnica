@@ -1,0 +1,265 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Customer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ec.com.bancointernacional.pruebatecnica.entities</a>
+</div>
+
+<h1>Coverage Summary for Class: Customer (ec.com.bancointernacional.pruebatecnica.entities)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Customer</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (2/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Customer$HibernateInstantiator</td>
+  </tr>
+  <tr>
+    <td class="name">Customer$HibernateProxy</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (2/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ec.com.bancointernacional.pruebatecnica.entities;
+&nbsp;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.entities.converters.CustomerNumberCipherConverter;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.schemas.IdentificationType;
+&nbsp;import io.github.luidmidev.jakarta.validations.Validations;
+&nbsp;import jakarta.persistence.*;
+&nbsp;import lombok.*;
+&nbsp;import org.springframework.data.domain.Persistable;
+&nbsp;
+&nbsp;import java.util.UUID;
+&nbsp;
+&nbsp;/**
+&nbsp; * Entidad que representa a un cliente dentro del sistema.
+&nbsp; *
+&nbsp; * &lt;p&gt;
+&nbsp; * Cada cliente tiene un identificador único, un nombre, un número cifrado
+&nbsp; * y una cuenta asociada. La entidad utiliza un {@link Converter} para cifrar
+&nbsp; * y descifrar automáticamente el número del cliente al persistirlo.
+&nbsp; * &lt;/p&gt;
+&nbsp; *
+&nbsp; * &lt;p&gt;
+&nbsp; * Se implementa {@link Persistable} para permitir a Spring Data determinar si
+&nbsp; * la entidad es nueva basándose en si el identificador es nulo.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;@Data
+&nbsp;@AllArgsConstructor
+&nbsp;@NoArgsConstructor
+&nbsp;@Builder
+&nbsp;@Entity
+&nbsp;@Table(
+&nbsp;        name = &quot;customers&quot;,
+&nbsp;        indexes = {
+&nbsp;                @Index(name = &quot;idx_account_number&quot;, columnList = &quot;account_number&quot;, unique = true)
+&nbsp;        }
+&nbsp;)
+&nbsp;public class Customer {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Identificador único del cliente.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Se genera automáticamente como un UUID mediante
+&nbsp;     * {@link GenerationType#UUID}. No se asigna manualmente.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     */
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.UUID)
+&nbsp;    private UUID id;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Nombre completo del cliente.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * No puede ser nulo y se almacena en la columna {@code name}.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     */
+&nbsp;    @Column(name = &quot;name&quot;, nullable = false)
+&nbsp;    private String name;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Número del cliente, almacenado de forma segura mediante cifrado.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Antes de persistir los datos, este campo se cifra usando
+&nbsp;     * {@link CustomerNumberCipherConverter}. Al cargarse desde la base de datos,
+&nbsp;     * se descifra automáticamente.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * No puede ser nulo y se almacena en la columna {@code number}.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     */
+&nbsp;    @Convert(converter = CustomerNumberCipherConverter.class)
+&nbsp;    @Column(name = &quot;number&quot;, nullable = false)
+&nbsp;    private String number;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Número de identificación del cliente (por ejemplo, cédula, pasaporte).
+&nbsp;     */
+&nbsp;    @Column(name = &quot;identification_number&quot;, length = 15, nullable = false)
+&nbsp;    private String identificationNumber;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tipo de identificación del cliente.
+&nbsp;     */
+&nbsp;    @Enumerated(EnumType.ORDINAL)
+&nbsp;    @Column(name = &quot;identification_type&quot;, nullable = false)
+&nbsp;    private IdentificationType identificationType;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Información de la cuenta bancaria asociada al cliente.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Este campo utiliza {@link Embedded} para almacenar los datos
+&nbsp;     * directamente en la tabla del cliente. Representa un objeto de valor
+&nbsp;     * con número de cuenta, tipo, saldo y estado.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     */
+&nbsp;    @Embedded
+&nbsp;    private Account account;
+&nbsp;
+&nbsp;    @PrePersist
+&nbsp;    @PreUpdate
+&nbsp;    private void validate() {
+<b class="pc">&nbsp;        switch (identificationType) {</b>
+&nbsp;            case CI -&gt; {
+<b class="pc">&nbsp;                if (Validations.isValidCi(identificationNumber)) {</b>
+&nbsp;                    return;
+&nbsp;                }
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;El número de cédula de identidad no es válido.&quot;);</b>
+&nbsp;            }
+&nbsp;            case RUC -&gt; {
+<b class="nc">&nbsp;                var ciPart = identificationNumber.substring(0, identificationNumber.length() - 3);</b>
+<b class="nc">&nbsp;                var rucPart = identificationNumber.substring(identificationNumber.length() - 3);</b>
+<b class="nc">&nbsp;                if (Validations.isValidCi(ciPart) &amp;&amp; rucPart.equals(&quot;001&quot;)) {</b>
+&nbsp;                    return;
+&nbsp;                }
+<b class="nc">&nbsp;                throw new IllegalArgumentException(&quot;El número de RUC no es válido.&quot;);</b>
+&nbsp;            }
+&nbsp;            case PASSPORT -&gt; {
+&nbsp;                // No se realizan validaciones específicas para pasaportes por ahora
+&nbsp;            }
+<b class="nc">&nbsp;            case null -&gt; throw new IllegalArgumentException(&quot;Tipo de identificación no puede ser nulo.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-25 22:33</div>
+</div>
+</body>
+</html>

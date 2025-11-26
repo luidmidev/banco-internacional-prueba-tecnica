@@ -1,0 +1,207 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/customers": {
+      "get": {
+        "tags": [
+          "customer-controller"
+        ],
+        "operationId": "page",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Pageable"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedModelCustomerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customers/identification/{identificationNumber}": {
+      "get": {
+        "tags": [
+          "customer-controller"
+        ],
+        "operationId": "getByIdentificationNumber",
+        "parameters": [
+          {
+            "name": "identificationNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pageable": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1
+          },
+          "sort": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AccountResponse": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "SAVINGS",
+              "CHECKING"
+            ]
+          },
+          "balance": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE",
+              "SUSPENDED",
+              "CLOSED"
+            ]
+          }
+        }
+      },
+      "CustomerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "identificationNumber": {
+            "type": "string"
+          },
+          "identificationType": {
+            "type": "string",
+            "enum": [
+              "RUC",
+              "CI",
+              "PASSPORT"
+            ]
+          },
+          "account": {
+            "$ref": "#/components/schemas/AccountResponse"
+          }
+        }
+      },
+      "PageMetadata": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PagedModelCustomerResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerResponse"
+            }
+          },
+          "page": {
+            "$ref": "#/components/schemas/PageMetadata"
+          }
+        }
+      }
+    }
+  }
+}

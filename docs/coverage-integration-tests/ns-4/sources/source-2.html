@@ -1,0 +1,152 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Account</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ec.com.bancointernacional.pruebatecnica.entities</a>
+</div>
+
+<h1>Coverage Summary for Class: Account (ec.com.bancointernacional.pruebatecnica.entities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">Account</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ec.com.bancointernacional.pruebatecnica.entities;
+&nbsp;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.schemas.AccountStatus;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.schemas.AccountType;
+&nbsp;import jakarta.persistence.Column;
+&nbsp;import jakarta.persistence.Embeddable;
+&nbsp;import jakarta.persistence.EnumType;
+&nbsp;import jakarta.persistence.Enumerated;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Builder;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;
+&nbsp;/**
+&nbsp; * Representa los datos de una cuenta bancaria embebida dentro de otra entidad JPA.
+&nbsp; *
+&nbsp; * &lt;p&gt;
+&nbsp; * Al estar anotada con {@link Embeddable}, sus campos se almacenan directamente
+&nbsp; * en la fila de la entidad que la contiene. Incluye el número de cuenta, el tipo,
+&nbsp; * el saldo y el estado actual.
+&nbsp; * &lt;/p&gt;
+&nbsp; *
+&nbsp; * &lt;p&gt;
+&nbsp; * Notas importantes:
+&nbsp; * &lt;ul&gt;
+&nbsp; *     &lt;li&gt;El número de cuenta debe ser único y no nulo.&lt;/li&gt;
+&nbsp; *     &lt;li&gt;Los enums se almacenan como valores ordinales, por lo que cambiar el orden
+&nbsp; *     de los valores en el enum afectará los datos existentes.&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;@Data
+&nbsp;@AllArgsConstructor
+&nbsp;@NoArgsConstructor
+&nbsp;@Builder
+&nbsp;@Embeddable
+&nbsp;public class Account {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Número de la cuenta bancaria.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Se almacena en la columna {@code account_number}, no permite nulos y debe ser único.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     */
+&nbsp;    @Column(name = &quot;account_number&quot;, nullable = false, unique = true, length = 20)
+&nbsp;    private String number;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tipo de cuenta bancaria (ahorros, corriente, etc.).
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Se almacena como un valor ordinal usando {@link EnumType#ORDINAL}.
+&nbsp;     * No permite nulos.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     */
+&nbsp;    @Column(name = &quot;account_type&quot;, nullable = false)
+&nbsp;    @Enumerated(EnumType.ORDINAL)
+&nbsp;    private AccountType type;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Saldo actual de la cuenta.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Se almacena en la columna {@code account_balance} y no permite nulos.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     */
+&nbsp;    @Column(name = &quot;account_balance&quot;, nullable = false)
+&nbsp;    private BigDecimal balance;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Estado actual de la cuenta (activa, bloqueada, cerrada, etc.).
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * Se almacena como un valor ordinal usando {@link EnumType#ORDINAL}
+&nbsp;     * y no permite nulos.
+&nbsp;     * &lt;/p&gt;
+&nbsp;     */
+&nbsp;    @Column(name = &quot;account_status&quot;, nullable = false)
+&nbsp;    @Enumerated(EnumType.ORDINAL)
+&nbsp;    private AccountStatus status;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-25 22:33</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,195 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CustomerNumberCipherConverter</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ec.com.bancointernacional.pruebatecnica.entities.converters</a>
+</div>
+
+<h1>Coverage Summary for Class: CustomerNumberCipherConverter (ec.com.bancointernacional.pruebatecnica.entities.converters)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CustomerNumberCipherConverter</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ec.com.bancointernacional.pruebatecnica.entities.converters;
+&nbsp;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.configuration.CustomerNumberCipherProperties;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.utils.CipherStringUtils;
+&nbsp;import jakarta.persistence.AttributeConverter;
+&nbsp;import jakarta.persistence.Converter;
+&nbsp;
+&nbsp;/**
+&nbsp; * Convertidor JPA responsable de cifrar y descifrar automáticamente los
+&nbsp; * números de cliente (customerNumber) al almacenar y recuperar datos desde la base.
+&nbsp; * &lt;p&gt;
+&nbsp; * Este convertidor permite proteger datos sensibles mediante cifrado simétrico
+&nbsp; * utilizando los parámetros configurados en {@link CustomerNumberCipherProperties}.
+&nbsp; * El cifrado se ejecuta durante la conversión de atributo a columna, mientras que
+&nbsp; * el descifrado ocurre al convertir desde la columna hacia la entidad.
+&nbsp; * &lt;/p&gt;
+&nbsp; *
+&nbsp; * &lt;h2&gt;Funcionamiento&lt;/h2&gt;
+&nbsp; * &lt;ul&gt;
+&nbsp; *   &lt;li&gt;&lt;b&gt;convertToDatabaseColumn&lt;/b&gt;: Cifra el valor antes de guardarlo.&lt;/li&gt;
+&nbsp; *   &lt;li&gt;&lt;b&gt;convertToEntityAttribute&lt;/b&gt;: Descifra el valor leído desde la base.&lt;/li&gt;
+&nbsp; * &lt;/ul&gt;
+&nbsp; *
+&nbsp; * &lt;h2&gt;Ejemplo de uso&lt;/h2&gt;
+&nbsp; * &lt;pre&gt;{@code
+&nbsp; * @Column(name = &quot;customer_number&quot;)
+&nbsp; * @Convert(converter = CustomerNumberCipherConverter.class)
+&nbsp; * private String customerNumber;
+&nbsp; * }&lt;/pre&gt;
+&nbsp; *
+&nbsp; * &lt;p&gt;
+&nbsp; * La clave y el algoritmo deben ser válidos para {@link javax.crypto.Cipher},
+&nbsp; * por ejemplo: &quot;AES&quot;, &quot;AES/ECB/PKCS5Padding&quot;, etc.
+&nbsp; * &lt;/p&gt;
+&nbsp; */
+&nbsp;@Converter
+&nbsp;public class CustomerNumberCipherConverter implements AttributeConverter&lt;String, String&gt; {
+&nbsp;
+&nbsp;    private final String key;
+&nbsp;    private final String algorithm;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Crea una nueva instancia del convertidor utilizando los parámetros
+&nbsp;     * de cifrado configurados en la aplicación.
+&nbsp;     *
+&nbsp;     * @param properties objeto de propiedades que contiene la clave y el algoritmo
+&nbsp;     *                   a utilizar para las operaciones criptográficas.
+&nbsp;     */
+<b class="fc">&nbsp;    public CustomerNumberCipherConverter(CustomerNumberCipherProperties properties) {</b>
+<b class="fc">&nbsp;        this.key = properties.getKey();</b>
+<b class="fc">&nbsp;        this.algorithm = properties.getAlgorithm();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Convierte el valor de la entidad hacia la forma en que debe almacenarse
+&nbsp;     * en la base de datos, aplicando cifrado si el atributo no es nulo.
+&nbsp;     *
+&nbsp;     * @param attribute el valor original (texto plano) desde la entidad.
+&nbsp;     * @return el valor cifrado para la columna, o {@code null} si el atributo es nulo.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String convertToDatabaseColumn(String attribute) {
+<b class="pc">&nbsp;        if (attribute == null) return null;</b>
+<b class="fc">&nbsp;        return CipherStringUtils.cipher(attribute, key, algorithm);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Convierte el valor almacenado en la base de datos hacia su forma legible
+&nbsp;     * por la entidad, aplicando descifrado si el valor no es nulo.
+&nbsp;     *
+&nbsp;     * @param dbData el texto cifrado proveniente de la base.
+&nbsp;     * @return el valor descifrado para la entidad, o {@code null} si el dato es nulo.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public String convertToEntityAttribute(String dbData) {
+<b class="pc">&nbsp;        if (dbData == null) return null;</b>
+<b class="fc">&nbsp;        return CipherStringUtils.decipher(dbData, key, algorithm);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-25 22:33</div>
+</div>
+</body>
+</html>

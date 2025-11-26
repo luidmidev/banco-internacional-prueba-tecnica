@@ -1,0 +1,108 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CustomerResponse</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ec.com.bancointernacional.pruebatecnica.dto</a>
+</div>
+
+<h1>Coverage Summary for Class: CustomerResponse (ec.com.bancointernacional.pruebatecnica.dto)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">CustomerResponse$AccountResponse</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ec.com.bancointernacional.pruebatecnica.dto;
+&nbsp;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.schemas.AccountStatus;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.schemas.AccountType;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.schemas.IdentificationType;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Builder;
+&nbsp;import lombok.Data;
+&nbsp;import lombok.NoArgsConstructor;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.UUID;
+&nbsp;
+&nbsp;@Data
+&nbsp;@NoArgsConstructor
+&nbsp;@AllArgsConstructor
+&nbsp;@Builder
+&nbsp;public class CustomerResponse {
+&nbsp;
+&nbsp;    private UUID id;
+&nbsp;    private String name;
+&nbsp;    private String number;
+&nbsp;    private String identificationNumber;
+&nbsp;    private IdentificationType identificationType;
+&nbsp;    private AccountResponse account;
+&nbsp;
+&nbsp;    @Data
+&nbsp;    @NoArgsConstructor
+&nbsp;    @AllArgsConstructor
+&nbsp;    @Builder
+&nbsp;    public static class AccountResponse {
+&nbsp;        private String number;
+&nbsp;        private AccountType type;
+&nbsp;        private BigDecimal balance;
+&nbsp;        private AccountStatus status;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-25 22:33</div>
+</div>
+</body>
+</html>

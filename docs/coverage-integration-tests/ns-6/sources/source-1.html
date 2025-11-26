@@ -1,0 +1,246 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CustomerDataInitializer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ec.com.bancointernacional.pruebatecnica.initializers</a>
+</div>
+
+<h1>Coverage Summary for Class: CustomerDataInitializer (ec.com.bancointernacional.pruebatecnica.initializers)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CustomerDataInitializer</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98%
+  </span>
+  <span class="absValue">
+    (50/51)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CustomerDataInitializer$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98%
+  </span>
+  <span class="absValue">
+    (50/51)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ec.com.bancointernacional.pruebatecnica.initializers;
+&nbsp;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.entities.Account;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.entities.Customer;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.schemas.AccountStatus;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.schemas.AccountType;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.schemas.IdentificationType;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.services.CustomerService;
+&nbsp;import ec.com.bancointernacional.pruebatecnica.utils.EcuadorIdGenerator;
+&nbsp;import jakarta.persistence.EntityManager;
+&nbsp;import jakarta.persistence.PersistenceContext;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import net.datafaker.Faker;
+&nbsp;import org.springframework.boot.CommandLineRunner;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.Locale;
+&nbsp;
+&nbsp;@Component
+&nbsp;@RequiredArgsConstructor
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;public class CustomerDataInitializer implements CommandLineRunner {
+&nbsp;
+&nbsp;    @PersistenceContext
+&nbsp;    private EntityManager entityManager;
+&nbsp;
+&nbsp;    private final CustomerService service;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    @Transactional
+&nbsp;    public void run(String... args) {
+<b class="fc">&nbsp;        var count = (Long) entityManager.createQuery(&quot;SELECT COUNT(c) FROM Customer c&quot;).getSingleResult();</b>
+&nbsp;
+<b class="pc">&nbsp;        if (count &gt; 0) {</b>
+<b class="nc">&nbsp;            log.info(&quot;Ya hay {} clientes en la base de datos, no se inicializan datos de prueba.&quot;, count);</b>
+&nbsp;            return; // ya hay datos, no inicializar
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        initFakerCustomers();</b>
+<b class="fc">&nbsp;        initRealCustomers();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Inicializa 20 clientes aleatorios usando la librería Faker.
+&nbsp;     */
+&nbsp;    private void initFakerCustomers() {
+<b class="fc">&nbsp;        var faker = new Faker(Locale.of(&quot;es&quot;, &quot;EC&quot;));</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; 20; i++) {</b>
+&nbsp;
+<b class="fc">&nbsp;            long nextCustomerNumber = service.nextCustomerNumber();</b>
+&nbsp;
+<b class="fc">&nbsp;            var account = Account.builder()</b>
+<b class="fc">&nbsp;                    .number(faker.number().digits(12))</b>
+<b class="fc">&nbsp;                    .balance(BigDecimal.valueOf(faker.number().randomDouble(2, 100, 5000)))</b>
+<b class="fc">&nbsp;                    .type(faker.options().option(AccountType.class))</b>
+<b class="fc">&nbsp;                    .status(AccountStatus.ACTIVE)</b>
+<b class="fc">&nbsp;                    .build();</b>
+&nbsp;
+<b class="fc">&nbsp;            var customer = Customer.builder()</b>
+<b class="fc">&nbsp;                    .name(faker.name().fullName())</b>
+<b class="fc">&nbsp;                    .number(String.valueOf(nextCustomerNumber)) // se cifrará automáticamente si está configurado</b>
+<b class="fc">&nbsp;                    .identificationType(IdentificationType.CI)</b>
+<b class="fc">&nbsp;                    .identificationNumber(EcuadorIdGenerator.generateCedula())</b>
+<b class="fc">&nbsp;                    .account(account)</b>
+<b class="fc">&nbsp;                    .build();</b>
+&nbsp;
+<b class="fc">&nbsp;            entityManager.persist(customer);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Inicializa 2 clientes con datos &quot;reales&quot; predefinidos
+&nbsp;     */
+&nbsp;    private void initRealCustomers() {
+<b class="fc">&nbsp;        var account1 = Account.builder()</b>
+<b class="fc">&nbsp;                .number(&quot;123456789012&quot;)</b>
+<b class="fc">&nbsp;                .balance(BigDecimal.valueOf(1500.75))</b>
+<b class="fc">&nbsp;                .type(AccountType.SAVINGS)</b>
+<b class="fc">&nbsp;                .status(AccountStatus.ACTIVE)</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;
+<b class="fc">&nbsp;        var customer1 = Customer.builder()</b>
+<b class="fc">&nbsp;                .name(&quot;Luis Vasquez&quot;)</b>
+<b class="fc">&nbsp;                .number(String.valueOf(service.nextCustomerNumber()))</b>
+<b class="fc">&nbsp;                .identificationType(IdentificationType.CI)</b>
+<b class="fc">&nbsp;                .identificationNumber(&quot;2300826357&quot;)</b>
+<b class="fc">&nbsp;                .account(account1)</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;
+<b class="fc">&nbsp;        entityManager.persist(customer1);</b>
+&nbsp;
+<b class="fc">&nbsp;        var account2 = Account.builder()</b>
+<b class="fc">&nbsp;                .number(&quot;987654321098&quot;)</b>
+<b class="fc">&nbsp;                .balance(BigDecimal.valueOf(3200.00))</b>
+<b class="fc">&nbsp;                .type(AccountType.CHECKING)</b>
+<b class="fc">&nbsp;                .status(AccountStatus.ACTIVE)</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;
+<b class="fc">&nbsp;        var customer2 = Customer.builder()</b>
+<b class="fc">&nbsp;                .name(&quot;Maria Gomez&quot;)</b>
+<b class="fc">&nbsp;                .number(String.valueOf(service.nextCustomerNumber()))</b>
+<b class="fc">&nbsp;                .identificationType(IdentificationType.CI)</b>
+<b class="fc">&nbsp;                .identificationNumber(&quot;2222222222&quot;)</b>
+<b class="fc">&nbsp;                .account(account2)</b>
+<b class="fc">&nbsp;                .build();</b>
+&nbsp;
+<b class="fc">&nbsp;        entityManager.persist(customer2);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-11-25 22:33</div>
+</div>
+</body>
+</html>
