@@ -23,14 +23,14 @@ Este documento describe los detalles técnicos de la aplicación Banco Internaci
 * La configuración de la base de datos está en `application.properties`.
 * Se utiliza **Flyway** para gestionar migraciones.
 * Las migraciones se encuentran en `classpath:db/migration`.
-* Allí mismo se encuentra el script **V1** que contiene el DDL inicial de la base de datos [[V1__init.sql](../src/main/resources/db/migration/V1__init.sql)].
+* Allí mismo se encuentra el script **V1** que contiene el DDL inicial de la base de datos [[V1__init.sql](../applicacion/src/main/resources/db/migration/V1__init.sql)].
 
 ---
 
 ## Manejo de Errores en API
 
 * Se utiliza la dependencia [`spring-web-problem-details`](https://central.sonatype.com/artifact/com.peluware/spring-web-problem-details) para cumplir con el estándar **[Problem Details RFC 9457](https://www.rfc-editor.org/rfc/rfc9457.html)**.
-* Esta dependencia autoconfigura la aplicación para retornar errores de API estandarizados, y ademas proporciona un API fluida para lanzar excepciones en aplicaciones web Spring.
+* Esta dependencia autoconfigura la aplicación spring web para retornar errores de API estandarizados, y ademas proporciona un API fluida para lanzar excepciones que posteriormente serán convertidas en el cuerpo de la respuesta.
 * Esta depencia fue desarrollada y publicada por la persona que realizó esta prueba técnica.
 
 ```xml
@@ -53,7 +53,7 @@ Este documento describe los detalles técnicos de la aplicación Banco Internaci
     * Búsquedas textuales y filtradas mediante **RSQL**.
     * Obtener campos de la entidad a través del **metamodel** de JPA sin usar reflexión, manteniendo buen rendimiento.
 
-* Ejemplo de uso en `CustomerService`:
+* El ejemplo de uso se encuentra en `CustomerService`:
 
 ```java
 var page = PeluwareDomainAdapters.adaptToSpringPage(pageable, (pagination, sort) ->
@@ -84,11 +84,11 @@ private String customerNumber;
 
 ## Gestión de Números de Cliente
 
-* Como el número de cliente debe ser cifrado en la base de datos, no es posible obtener el último número de forma directa.
+* Como el número de cliente se debe almacenar cifrado en la base de datos, no es posible obtener el último número de forma directa y optima para generar el siguiente (asumiento que debía ser autoincremental).
 * Para esto, se creó una **tabla de secuencias** (`customer_number_seq`) y el servicio expone un método `nextCustomerNumber()`:
 
     * Garantiza **atomicidad** y unicidad.
-    * Permite obtener el siguiente número de cliente sin preocuparse por concurrencia.
+    * Permite obtener el siguiente número de cliente sin preocuparse por la concurrencia ya que esta operación es propia del gestor y es 100% atómica.
 
 ```java
 public long nextCustomerNumber() {
@@ -140,29 +140,29 @@ private void initFakerCustomers() {
 
 ## Screenshots en Postman
 
-### Buscar cleinte que existe:
+* Buscar cleinte que existe:
 
 ![Buscar cliente que existe](assets/buscar-cliente-existe.png)
 
-### Buscar cliente que no existe:
+* Buscar cliente que no existe:
 
 ![Buscar cliente que no existe](assets/buscar-cliente-no-existe.png)
 
-### Buscar clientes que coincidan con  "Luis":
+* Buscar clientes que coincidan con  "Luis" (Busqueda dinamica basada en texto, Full-Text Search):
 
 ![Buscar cliente que coincidan con  "Luis"](assets/buscar-cliente-luis.png)
 
-### Buscar clientes que tengan cuenta de tipo corriente y saldo menor a 1000:
+* Buscar clientes que tengan cuenta de tipo corriente y saldo menor a 1000:
 
 ![Buscar clientes que tengan cuenta de tipo corriente y saldo menor a 1000](assets/buscar-cliente-cuenta-corriente-saldo-menor-1000.png)
 
 ## Pruebas de integración
 
-## Resultados de las pruebas de integración:
+* Resultados de las pruebas de integración:
 
 ![Resultados de las pruebas de integración](assets/pruebas-de-integracion.png)
 
-## Coverage de las pruebas de integración:
+* Coverage de las pruebas de integración:
 
 ![Coverage de las pruebas de integración](assets/coverage-pruebas-de-integracion.png)
 
