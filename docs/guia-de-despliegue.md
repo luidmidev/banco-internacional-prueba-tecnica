@@ -21,7 +21,7 @@ persisrencia de datos usa PostgreSQL, el despliegue se lo hace usando Docker Com
 ├── docker-compose.yml
 ├── .env
 ├── target/
-│   └── banco-internacional-prueba-tecnica.war
+│   └── banco-internacional-prueba-tecnica-1.0.0.war
 └── README.md
 ```
 
@@ -35,7 +35,7 @@ Para generar el archivo WAR, ejecutar el siguiente comando en la raíz del proye
 mvn clean package
 ```
 
-En caso muy excepcional de que falle alguno de los tests, se puede usar:
+En caso muy excepcional de que falle alguno de los tests, o si quiere omitirlos se puede usar:
 
 ```bash
 mvn clean package -DskipTests
@@ -63,8 +63,9 @@ SPRING_DATASOURCE_PASSWORD="${POSTGRES_PASSWORD}"
 SPRINGDOC_API_DOCS_ENABLED=false
 ```
 
-Se recoimienda modificar las variables según el entorno de despliegue, especialmente
-las credenciales de la base de datos y las variables de cifrado.
+Se recomienda modificar las variables según el entorno de despliegue, especialmente
+las credenciales de la base de datos y las variables de cifrado, tenga en cuenta que el tamaño
+de la llave debe ser compatible con el algoritmo de cifrado.
 
 Para entornos de producción, se recomienda desactivar el acceso a la documentación de la API
 para no exponer información de la aplicación.
@@ -77,7 +78,7 @@ para no exponer información de la aplicación.
 docker compose up -d
 ```
 
-* La app estará disponible en [http://localhost:8080](http://localhost:8080)
+* La app estará disponible por defecto en [http://localhost:8080](http://localhost:8080)
 * Ver logs:
 
 ```bash
@@ -108,3 +109,6 @@ Si se desea habilitar la documentación de la API REST, modificar la variable
 Luego acceder al siguiente enlace para ver la documentación generada automáticamente:
 
 [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+Esta documentación puede ser importada en postman o en cualquier otro cliente que soporte
+la especificación OpenApi.
